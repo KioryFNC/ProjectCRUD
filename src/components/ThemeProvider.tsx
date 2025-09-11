@@ -1,8 +1,7 @@
-// src/components/ThemeProvider.tsx
 "use client";
 
-import { useThemeStore } from "@/store/themeStore";
 import { useEffect } from "react";
+import { useThemeStore } from "@/store/themeStore";
 
 export default function ThemeProvider({
   children,
@@ -12,7 +11,9 @@ export default function ThemeProvider({
   const { theme } = useThemeStore();
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
+    if (typeof window !== "undefined") {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
   }, [theme]);
 
   return <>{children}</>;

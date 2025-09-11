@@ -1,22 +1,16 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+
+type Theme = "light" | "dark" | "dracula";
 
 interface ThemeState {
-  theme: "light" | "dark";
+  theme: Theme;
   toggleTheme: () => void;
 }
 
-export const useThemeStore = create<ThemeState>()(
-  persist(
-    (set) => ({
-      theme: "light",
-      toggleTheme: () =>
-        set((state) => ({
-          theme: state.theme === "light" ? "dark" : "light",
-        })),
-    }),
-    {
-      name: "theme-storage",
-    }
-  )
-);
+export const useThemeStore = create<ThemeState>((set) => ({
+  theme: "light",
+  toggleTheme: () =>
+    set((state) => ({
+      theme: state.theme === "light" ? "dracula" : "light",
+    })),
+}));
