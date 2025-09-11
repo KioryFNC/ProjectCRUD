@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import CreateProductForm from "../components/CreateProductForm";
 import EditProductForm from "../components/EditProductForm";
+import MetricsChart from "../components/MetricsChart";
 
 export default function ProductsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -94,6 +95,10 @@ export default function ProductsPage() {
         >
           Adicionar Produto
         </button>
+      </div>
+
+      <div className="mt-8">
+        <MetricsChart />
       </div>
 
       <div className="mt-8 overflow-x-auto">
