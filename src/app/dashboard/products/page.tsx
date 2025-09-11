@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import CreateProductForm from "../components/CreateProductForm";
 
 export default function ProductsPage() {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -60,6 +62,11 @@ export default function ProductsPage() {
     }
   };
 
+  const handleOpenEditModal = (product: Product) => {
+    setEditingProduct(product);
+    setIsEditModalOpen(true);
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -98,13 +105,19 @@ export default function ProductsPage() {
                 <td>
                   <div className="avatar">
                     <div className="w-16 rounded">
-                      <Image
-                        src={product.thumbnail}
-                        alt={product.title}
-                        width={64}
-                        height={64}
-                        className="rounded"
-                      />
+                      {product.thumbnail ? (
+                        <Image
+                          src={product.thumbnail}
+                          alt={product.title}
+                          width={64}
+                          height={64}
+                          className="rounded"
+                        />
+                      ) : (
+                        <div className="flex h-16 w-16 items-center justify-center rounded bg-base-200 text-xs text-base-content/60">
+                          <span>Sem Imagem</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </td>
@@ -117,7 +130,12 @@ export default function ProductsPage() {
                   )}
                 </td>
                 <td className="space-x-2">
-                  <button className="btn btn-sm btn-info">Editar</button>
+                  <button
+                    className="btn btn-sm btn-info"
+                    onClick={() => handleOpenEditModal(product)}
+                  >
+                    Editar
+                  </button>
                   <button
                     className="btn btn-sm btn-error"
                     onClick={() => handleDelete(product.id)}
@@ -143,6 +161,23 @@ export default function ProductsPage() {
                 onSuccess={handleSucess}
                 onClose={() => setIsModalOpen(false)}
               />
+            </div>
+          </div>
+        </dialog>
+      )}
+
+      {isEditModalOpen && editingProduct && (
+        <dialog open className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="text-lg font-bold">
+              Editando Produto: {editingProduct.title}
+            </h3>
+
+            <p className="py-4">Formulário de edição em construção...</p>
+            <div className="modal-action">
+              <button className="btn" onClick={() => setIsEditModalOpen(false)}>
+                Fechar
+              </button>
             </div>
           </div>
         </dialog>
