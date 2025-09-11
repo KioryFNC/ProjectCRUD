@@ -104,7 +104,7 @@ export default function ProductsPage() {
         )}
       </div>
       {isModalOpen && (
-        <dialog className="modal modal-open">
+        <dialog open className="modal modal-open">
           <div className="modal-box">
             <h3 className="text-lg font-bold">Adicionar Novo Produto</h3>
             <p className="py-4">Formulario em construção...</p>
