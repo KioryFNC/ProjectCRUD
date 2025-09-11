@@ -7,3 +7,10 @@ export const signupSchema = z.object({
 });
 
 export type SignupFormType = z.infer<typeof signupSchema>;
+
+export const loginSchema = z.object({
+  email: z.string().email("Por favor, insira um e-mail válido."),
+  password: z.string().min(1, "a Senha é obrigatória."),
+});
+
+export type LoginFormType = z.infer<typeof loginSchema>;
