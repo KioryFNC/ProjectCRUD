@@ -5,34 +5,41 @@ import api from "@/lib/api";
 import Image from "next/image";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
+import CreateProductForm from "../components/CreateProductForm";
 
 export default function ProductsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const { token } = useAuthStore();
 
+  const fetchProducts = async () => {
+    if (!isLoading) setIsLoading(true);
+    try {
+      const response = await api.get("/products", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setProducts(response.data.data);
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+      alert("Não foi possivel carregar os produtos");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await api.get("/products", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setProducts(response.data.data);
-      } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
-        alert("Não foi possivel carregar os produtos");
-      } finally {
-        setIsLoading(false);
-      }
-    };
     if (token) {
       fetchProducts();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  const handleSucess = () => {
+    setIsModalOpen(false);
+    fetchProducts();
+  };
 
   if (isLoading) {
     return (
@@ -49,7 +56,6 @@ export default function ProductsPage() {
         <button
           className="btn btn-primary"
           onClick={() => {
-            console.log("Botão 'Adicionar Produto' foi clicado!");
             setIsModalOpen(true);
           }}
         >
@@ -107,11 +113,12 @@ export default function ProductsPage() {
         <dialog open className="modal modal-open">
           <div className="modal-box">
             <h3 className="text-lg font-bold">Adicionar Novo Produto</h3>
-            <p className="py-4">Formulario em construção...</p>
-            <div className="modal-action">
-              <button className="btn" onClick={() => setIsModalOpen(false)}>
-                Fechar
-              </button>
+            <div className="py-4">
+              <CreateProductForm
+                token={token}
+                onSuccess={handleSucess}
+                onClose={() => setIsModalOpen(false)}
+              />
             </div>
           </div>
         </dialog>

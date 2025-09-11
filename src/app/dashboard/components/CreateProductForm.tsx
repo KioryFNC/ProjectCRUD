@@ -9,6 +9,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 
 interface CreateProductFormProps {
+  token: string | null;
   onSuccess: () => void;
   onClose: () => void;
 }
@@ -16,6 +17,7 @@ interface CreateProductFormProps {
 export default function CreateProductForm({
   onSuccess,
   onClose,
+  token,
 }: CreateProductFormProps) {
   const {
     register,
@@ -32,9 +34,10 @@ export default function CreateProductForm({
     formData.append("thumbnail", data.thumbnail[0]);
 
     try {
-      await api.post("/product", formData, {
+      await api.post("/products", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       });
       alert("Produto criado com sucesso!");
