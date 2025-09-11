@@ -1,15 +1,20 @@
 "use client";
 
-import { LoginFormType, loginSchema } from "../../schemas/authSchema";
-import api from "../../lib/api";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthStore } from "@/app/store/authStore";
+import { useRouter } from "next/navigation";
+
+// 1. Importamos o schema e o tipo de LOGIN
+import { LoginFormType, loginSchema } from "../../schemas/authSchema";
+import api from "../../lib/api";
+
+// 2. Importamos nosso "cofre" (store) do Zustand
+import { useAuthStore } from "../../store/authStore";
 
 export default function LoginPage() {
   const router = useRouter();
 
+  // 3. Pegamos a função "setToken" do nosso store para salvar a chave
   const { setToken } = useAuthStore();
 
   const {
@@ -17,16 +22,25 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormType>({
+    // 4. Usamos o resolver do Zod com o schema de LOGIN
     resolver: zodResolver(loginSchema),
   });
 
+  // 5. Função de submissão do formulário de login
   const onSubmit = async (data: LoginFormType) => {
     try {
+      // 6. Enviamos os dados para a rota de LOGIN
       const response = await api.post("/auth/login", data);
+
+      // 7. A API nos devolve um token. Pegamos ele da resposta.
       const token = response.data.token;
+
+      // 8. ESTE É O PASSO CRUCIAL: Salvamos o token no nosso "cofre"
       setToken(token);
-      alert("login realizado com sucesso!");
-      router.push("/src/app/dashboard/products");
+
+      alert("Login realizado com sucesso!");
+      // 9. Redirecionamos o usuário para a página de produtos
+      router.push("/dashboard/products");
     } catch (error) {
       alert("E-mail ou senha inválidos.");
       console.error(error);
@@ -38,6 +52,8 @@ export default function LoginPage() {
       <div className="card w-full max-w-sm shrink-0 bg-base-100 shadow-2xl">
         <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
           <h1 className="text-2xl font-bold">Login</h1>
+
+          {/* CAMPO E-MAIL */}
           <div className="form-control">
             <label className="label">
               <span className="label-text">Email</span>
@@ -53,6 +69,7 @@ export default function LoginPage() {
             )}
           </div>
 
+          {/* CAMPO SENHA */}
           <div className="form-control">
             <label className="label">
               <span className="label-text">Senha</span>
@@ -70,6 +87,7 @@ export default function LoginPage() {
             )}
           </div>
 
+          {/* BOTÃO DE ENVIAR */}
           <div className="form-control mt-6">
             <button type="submit" className="btn btn-primary">
               Entrar
