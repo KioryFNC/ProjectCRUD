@@ -1,18 +1,26 @@
 "use client";
 
 import { Product } from "@/interfaces/Product";
-import { useEffect, useState } from "react";
-import api from "@/app/lib/api";
+import api from "@/lib/api";
 import Image from "next/image";
+import { useAuthStore } from "@/store/authStore";
+import { useEffect, useState } from "react";
 
 export default function ProductsPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { token } = useAuthStore();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await api.get("/products");
+        const response = await api.get("/products", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setProducts(response.data.data);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
@@ -21,9 +29,10 @@ export default function ProductsPage() {
         setIsLoading(false);
       }
     };
-
-    fetchProducts();
-  }, []);
+    if (token) {
+      fetchProducts();
+    }
+  }, [token]);
 
   if (isLoading) {
     return (
@@ -37,7 +46,15 @@ export default function ProductsPage() {
     <div className="p-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Meus Produtos</h1>
-        <button className="btn btn-bg-primary">Adicionar Produto</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            console.log("Botão 'Adicionar Produto' foi clicado!");
+            setIsModalOpen(true);
+          }}
+        >
+          Adicionar Produto
+        </button>
       </div>
 
       <div className="mt-8 overflow-x-auto">
@@ -86,6 +103,19 @@ export default function ProductsPage() {
           <p className="py-8 text-center">Nenhum cadastrado ainda</p>
         )}
       </div>
+      {isModalOpen && (
+        <dialog className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="text-lg font-bold">Adicionar Novo Produto</h3>
+            <p className="py-4">Formulario em construção...</p>
+            <div className="modal-action">
+              <button className="btn" onClick={() => setIsModalOpen(false)}>
+                Fechar
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 }

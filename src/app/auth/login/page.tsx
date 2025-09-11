@@ -4,10 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
-import { LoginFormType, loginSchema } from "../../schemas/authSchema";
-import api from "../../lib/api";
+import { LoginFormType, loginSchema } from "../../../schemas/authSchema";
+import api from "../../../lib/api";
 
-import { useAuthStore } from "../../store/authStore";
+import { useAuthStore } from "../../../store/authStore";
 
 export default function LoginPage() {
   const router = useRouter();

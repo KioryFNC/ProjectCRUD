@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "../../store/authStore";
 import { useRouter } from "next/navigation";
 
 export default function DashboardLayout({
