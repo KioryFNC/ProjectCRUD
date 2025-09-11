@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useAuthStore } from "../../store/authStore";
 import { useRouter } from "next/navigation";
+import Navbar from "./components/Navbar";
 
 export default function DashboardLayout({
   children,
@@ -26,8 +27,9 @@ export default function DashboardLayout({
 
   if (!isClient || !token) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <h1 className="text-xl">Carregando...</h1>
+      <div>
+        <Navbar />
+        {children}
       </div>
     );
   }
