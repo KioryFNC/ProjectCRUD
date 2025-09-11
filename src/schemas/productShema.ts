@@ -28,3 +28,12 @@ export const createProductSchema = z.object({
 });
 
 export type CreateProductFormType = z.infer<typeof createProductSchema>;
+
+export const editProductSchema = z.object({
+  title: z.string().min(3, "O titulo precisa ter no minimo 3 caracteres."),
+  description: z
+    .string()
+    .min(10, "A descrição precisa ter no minimo 10 caracteres."),
+});
+
+export type EditProductFormType = z.infer<typeof editProductSchema>;

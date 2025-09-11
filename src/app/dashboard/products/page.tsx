@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import CreateProductForm from "../components/CreateProductForm";
+import EditProductForm from "../components/EditProductForm";
 
 export default function ProductsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -40,6 +41,12 @@ export default function ProductsPage() {
 
   const handleSucess = () => {
     setIsModalOpen(false);
+    fetchProducts();
+  };
+
+  const handleEditSuccess = () => {
+    setIsEditModalOpen(false);
+    setEditingProduct(null);
     fetchProducts();
   };
 
@@ -173,11 +180,13 @@ export default function ProductsPage() {
               Editando Produto: {editingProduct.title}
             </h3>
 
-            <p className="py-4">Formulário de edição em construção...</p>
-            <div className="modal-action">
-              <button className="btn" onClick={() => setIsEditModalOpen(false)}>
-                Fechar
-              </button>
+            <div className="py-4">
+              <EditProductForm
+                product={editingProduct}
+                token={token}
+                onSuccess={handleEditSuccess}
+                onClose={() => setIsEditModalOpen(false)}
+              />
             </div>
           </div>
         </dialog>
