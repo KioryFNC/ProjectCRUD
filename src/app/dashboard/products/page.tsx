@@ -41,6 +41,25 @@ export default function ProductsPage() {
     fetchProducts();
   };
 
+  const handleDelete = async (productId: string) => {
+    if (!window.confirm("Você tem certeza que deseja deletar este produto? ")) {
+      return;
+    }
+
+    try {
+      await api.delete(`/products/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      alert("Produto deletado com sucesso!");
+      fetchProducts();
+    } catch (error) {
+      console.error("Erro ao deletar produto:", error);
+      alert("Não foi possivel deletar o produto");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -99,7 +118,12 @@ export default function ProductsPage() {
                 </td>
                 <td className="space-x-2">
                   <button className="btn btn-sm btn-info">Editar</button>
-                  <button className="btn btn-sm btn-error">Deletar</button>
+                  <button
+                    className="btn btn-sm btn-error"
+                    onClick={() => handleDelete(product.id)}
+                  >
+                    Deletar
+                  </button>
                 </td>
               </tr>
             ))}
